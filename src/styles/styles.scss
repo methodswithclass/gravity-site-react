@@ -11,7 +11,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+
   .container  {
     position:relative;
     width: 80%;
@@ -28,4 +28,18 @@ html, body {
     color: white;
     font-size: 40px;
   }
+}
+
+.settingsbtn {
+  position: absolute;
+  top: 100px;
+  right: 0;
+  margin: 20px;
+  font-size: 70px;
+}
+
+.arena {
+  position: absolute;
+  width: 95%;
+  height: 95%;
 }

@@ -7,6 +7,7 @@ import Calibrate from './app/state/Calibrate';
 import Demo from './app/state/Demo';
 import Collide from './app/state/Collide';
 import Balance from './app/state/Balance';
+import Settings from './app/state/Settings';
 import { useNavigation } from './app/services/state.service';
 import './styles/index.scss';
 
@@ -33,6 +34,7 @@ function App() {
           </Route>
           <Route path="calibrate" element={<Calibrate />} />
           <Route path="home" element={<Home />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="/" element={<Root />} />
         </Routes>
       </Router>

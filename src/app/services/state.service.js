@@ -72,7 +72,7 @@ export const getItem = (state) => {
   return stateMap[state];
 };
 
-export const getItems = () => {
+export const getPages = () => {
   return states.filter((item) => item.page === true);
 };
 
@@ -80,5 +80,5 @@ export default {
   useNavigation,
   getState,
   getItem,
-  getItems,
+  getPages,
 };

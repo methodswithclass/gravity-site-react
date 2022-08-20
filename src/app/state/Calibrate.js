@@ -1,5 +1,5 @@
 const Calibrate = () => {
-  return <div></div>;
+  return <div>Calibrate</div>;
 };
 
 export default Calibrate;
