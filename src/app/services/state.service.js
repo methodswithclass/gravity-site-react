@@ -49,9 +49,15 @@ const stateMap = states.reduce((accum, item) => {
   return { ...accum, [item.name]: item };
 }, {});
 
+const urlMap = states.reduce((accum, item) => {
+  return { ...accum, [item.url]: item };
+});
+
 const setState = (state) => {
   currentState = state;
 };
+
+setState(urlMap[window.location.pathname]?.name);
 
 export const getState = () => {
   return currentState;
