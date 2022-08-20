@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './app/state/Home';
+import Moveable from './app/state/Moveable';
+import Game from './app/state/Game';
+import Calibrate from './app/state/Calibrate';
+import Demo from './app/state/Demo';
+import Collide from './app/state/Collide';
+import Balance from './app/state/Balance';
+import { useNavigation } from './app/services/state.service';
+import './styles/index.scss';
+
+const Root = () => {
+  const nav = useNavigation();
+
+  useEffect(() => {
+    nav('home');
+  }, []);
+  return null;
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="museo">
+      <Router>
+        <Routes>
+          <Route path="moveable" element={<Moveable />}>
+            <Route path="demo" element={<Demo />} />
+            <Route path="game" element={<Game />}>
+              <Route path="balance" element={<Balance />} />
+              <Route path="collide" element={<Collide />} />
+            </Route>
+          </Route>
+          <Route path="calibrate" element={<Calibrate />} />
+          <Route path="home" element={<Home />} />
+          <Route path="/" element={<Root />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
