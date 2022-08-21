@@ -11,17 +11,19 @@ const states = [
   },
   {
     name: 'calibrate',
-    url: '/calibrate',
+    url: '/moveable/calibrate',
     color: 'green-back',
     title: 'Calibrate',
     page: true,
+    showObject: false,
   },
   {
     name: 'demo',
-    url: '/moveable/demo',
+    url: '/moveable',
     color: 'blue-back',
     title: 'Demo',
     page: true,
+    showObject: true,
   },
   {
     name: 'balance',
@@ -29,6 +31,7 @@ const states = [
     color: 'blue4-back',
     title: 'Balance',
     page: true,
+    showObject: true,
   },
   {
     name: 'collide',
@@ -36,6 +39,7 @@ const states = [
     color: 'green7-back',
     title: 'Collide',
     page: true,
+    showObject: true,
   },
   {
     name: 'settings',

@@ -5,7 +5,7 @@ const g = mcaccel.utility;
 const accelMap = {};
 
 export const init = (props) => {
-  const { id } = props;
+  const { id, showObject } = props;
   const params = {
     interval: 2,
     filterSize: 3,
@@ -19,7 +19,7 @@ export const init = (props) => {
   const objParams = {
     shape: 'circle',
     size: 200,
-    color: 'black',
+    color: showObject ? 'black' : 'transparent',
   };
 
   /*
