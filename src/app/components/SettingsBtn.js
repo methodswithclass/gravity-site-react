@@ -1,11 +1,11 @@
 import { FaCog } from 'react-icons/fa';
-import { useNavigation } from '../services/state.service';
+import { useNavigate } from '../services/state.service';
 
 const SettingsBtn = () => {
-  const nav = useNavigation();
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    nav('settings');
+    navigate('settings');
   };
 
   return (

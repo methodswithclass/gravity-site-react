@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate as useNavigateDom } from 'react-router-dom';
 
 let currentState = '';
 
@@ -9,14 +9,14 @@ const states = [
     color: 'white',
     title: 'Home',
   },
-  {
-    name: 'calibrate',
-    url: '/moveable/calibrate',
-    color: 'green-back',
-    title: 'Calibrate',
-    page: true,
-    showObject: false,
-  },
+  // {
+  //   name: 'calibrate',
+  //   url: '/moveable/calibrate',
+  //   color: 'green-back',
+  //   title: 'Calibrate',
+  //   page: true,
+  //   showObject: false,
+  // },
   {
     name: 'demo',
     url: '/moveable',
@@ -67,8 +67,8 @@ export const getState = () => {
   return currentState;
 };
 
-export const useNavigation = () => {
-  const nav = useNavigate();
+export const useNavigate = () => {
+  const nav = useNavigateDom();
 
   const goto = (state) => {
     setState(state);
@@ -87,7 +87,7 @@ export const getPages = () => {
 };
 
 export default {
-  useNavigation,
+  useNavigate,
   getState,
   getItem,
   getPages,

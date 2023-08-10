@@ -1,41 +1,27 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './app/state/Home';
-import Moveable from './app/state/Moveable';
-import Game from './app/state/Game';
-import Calibrate from './app/state/Calibrate';
-import Collide from './app/state/Collide';
-import Balance from './app/state/Balance';
-import Settings from './app/state/Settings';
-import { useNavigation } from './app/services/state.service';
+import React, { useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react';
+import Routes from 'app/routes';
+import { overrideConsole } from 'app/utils/utils';
 import './styles/index.scss';
-
-const Root = () => {
-  const nav = useNavigation();
-
-  useEffect(() => {
-    nav('home');
-  }, []);
-  return null;
-};
+import { init } from 'accelerometer/utils/calibrate';
 
 function App() {
+  const { REACT_APP_ENV: env } = process.env;
+  if (env === 'prod') {
+    overrideConsole();
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
   return (
     <div className="museo">
-      <Router>
-        <Routes>
-          <Route path="moveable" element={<Moveable />}>
-            <Route path="calibrate" element={<Calibrate />} />
-            <Route path="game" element={<Game />}>
-              <Route path="balance" element={<Balance />} />
-              <Route path="collide" element={<Collide />} />
-            </Route>
-          </Route>
-          <Route path="home" element={<Home />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="/" element={<Root />} />
-        </Routes>
-      </Router>
+      <ChakraProvider>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </ChakraProvider>
     </div>
   );
 }

@@ -1,9 +1,11 @@
-import { Outlet } from 'react-router-dom';
+import { useOutlet } from 'react-router-dom';
 
 const Game = () => {
+  const outlet = useOutlet();
   return (
     <div>
-      <Outlet />
+      Game
+      {outlet}
     </div>
   );
 };

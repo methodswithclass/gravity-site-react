@@ -1,12 +1,15 @@
-import { useNavigation, getItem } from '../services/state.service';
+import { useNavigate, getItem } from '../services/state.service';
+import { checkMobile } from 'app/utils/utils';
 
 const LinkBtn = (props) => {
   const { name, state } = props;
 
-  const nav = useNavigation();
+  const navigate = useNavigate();
+
+  const isMobile = checkMobile();
 
   const handleClick = () => {
-    nav(state);
+    navigate(state);
   };
 
   const getColor = () => {
@@ -14,7 +17,10 @@ const LinkBtn = (props) => {
   };
 
   return (
-    <div className="linkbtn" onClick={handleClick}>
+    <div
+      className={`${isMobile ? 'linkbtn-mobile' : 'linkbtn'}`}
+      onClick={handleClick}
+    >
       <div className={`container ${getColor()}`}>
         <div className="inner">{name}</div>
       </div>
