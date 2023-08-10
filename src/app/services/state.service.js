@@ -1,6 +1,4 @@
-import { useNavigate as useNavigateDom } from 'react-router-dom';
-
-let currentState = '';
+import { useLocation, useNavigate as useNavigateDom } from 'react-router-dom';
 
 const states = [
   {
@@ -9,14 +7,13 @@ const states = [
     color: 'white',
     title: 'Home',
   },
-  // {
-  //   name: 'calibrate',
-  //   url: '/moveable/calibrate',
-  //   color: 'green-back',
-  //   title: 'Calibrate',
-  //   page: true,
-  //   showObject: false,
-  // },
+  {
+    name: 'settings',
+    url: '/settings',
+    color: 'green-back',
+    title: 'Settings',
+    page: true,
+  },
   {
     name: 'demo',
     url: '/moveable',
@@ -41,12 +38,6 @@ const states = [
     page: true,
     showObject: true,
   },
-  {
-    name: 'settings',
-    url: '/settings',
-    color: 'green7-back',
-    title: 'Settings',
-  },
 ];
 
 const stateMap = states.reduce((accum, item) => {
@@ -55,40 +46,37 @@ const stateMap = states.reduce((accum, item) => {
 
 const urlMap = states.reduce((accum, item) => {
   return { ...accum, [item.url]: item };
-});
-
-const setState = (state) => {
-  currentState = state;
-};
-
-setState(urlMap[window.location.pathname]?.name);
-
-export const getState = () => {
-  return currentState;
-};
+}, {});
 
 export const useNavigate = () => {
   const nav = useNavigateDom();
 
   const goto = (state) => {
-    setState(state);
+    if (state === -1) {
+      nav(-1);
+      return;
+    }
     nav(stateMap[state].url);
   };
 
   return goto;
 };
 
-export const getItem = (state) => {
+export const usePage = () => {
+  const location = useLocation();
+  const item = urlMap[location.pathname];
+  const state = item.name;
+  return state;
+};
+
+export const useGetItem = (page) => {
+  const state = usePage();
+  if (page) {
+    return stateMap[page];
+  }
   return stateMap[state];
 };
 
 export const getPages = () => {
   return states.filter((item) => item.page === true);
-};
-
-export default {
-  useNavigate,
-  getState,
-  getItem,
-  getPages,
 };

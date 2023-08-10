@@ -9,14 +9,16 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderMark,
+  ListItem,
+  ListIcon,
+  UnorderedList,
 } from '@chakra-ui/react';
 import {
   setCalibrate,
   getInitialCalibrate,
   getFactorFromPercent,
 } from 'accelerometer/utils/calibrate';
-import { useNavigate } from 'app/services/state.service';
-import Button from 'app/components/Button';
+import BackButton from 'app/components/BackButton';
 import { checkMobile } from 'app/utils/utils';
 
 const Settings = () => {
@@ -24,15 +26,9 @@ const Settings = () => {
 
   const isMobile = checkMobile();
 
-  const navigate = useNavigate();
-
   const [sliderValue, setSliderValue] = useState(initialFactor);
   const [xDir, setxDir] = useState(xAxis > 0 ? false : true);
   const [yDir, setyDir] = useState(yAxis > 0 ? false : true);
-
-  const handleHome = () => {
-    navigate('home');
-  };
 
   const handleX = (e) => {
     const value = e.target.checked;
@@ -55,7 +51,7 @@ const Settings = () => {
 
   return (
     <>
-      <Button title="Home" onClick={handleHome} classNames={`blue-back`} />
+      <BackButton />
       <Flex
         w="100%"
         h="100%"
@@ -64,6 +60,13 @@ const Settings = () => {
         align="center"
         justify="center"
       >
+        <UnorderedList>
+          <ListItem>
+            If the object moves opposite as expected in the horizonal or
+            vertical directions, switch the toggles
+          </ListItem>
+          <ListItem>Adjust the speed by moving the slider</ListItem>
+        </UnorderedList>
         <FormControl
           m={50}
           display="flex"
@@ -71,7 +74,7 @@ const Settings = () => {
           justifyContent="center"
         >
           <FormLabel htmlFor="x-dir" mb="0">
-            x-dir
+            horizontal
           </FormLabel>
           <Switch size="lg" id="x-dir" isChecked={xDir} onChange={handleX} />
         </FormControl>
@@ -82,7 +85,7 @@ const Settings = () => {
           justifyContent="center"
         >
           <FormLabel htmlFor="y-dir" mb="0">
-            y-dir
+            vertical
           </FormLabel>
           <Switch size="lg" id="y-dir" isChecked={yDir} onChange={handleY} />
         </FormControl>

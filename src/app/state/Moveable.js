@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOutlet } from 'react-router-dom';
 import Button from 'app/components/Button';
+import BackButton from 'app/components/BackButton';
+import SettingsBtn from 'app/components/SettingsBtn';
 import { init, get } from '../services/accel.service';
-import { getState, getItem, useNavigate } from '../services/state.service';
+import { useGetItem } from '../services/state.service';
 import Console from '../components/console/Console';
 
 const Moveable = () => {
   const { REACT_APP_ENV: env } = process.env;
-  const navigate = useNavigate();
-  const id = getState();
-  const item = getItem(id);
+  const item = useGetItem();
+  const id = item.name;
   const outlet = useOutlet();
   const { showObject } = item;
   const arena = useRef({});
   const object = useRef({});
   const [running, setRunning] = useState(false);
-
-  const handleHome = () => {
-    navigate('home');
-  };
 
   const handleToggle = () => {
     const accel = get('global');
@@ -46,12 +43,13 @@ const Moveable = () => {
       <div ref={arena} className="arena" id="arena">
         <div ref={object} className="object" id="object"></div>
       </div>
-      <Button title="Home" onClick={handleHome} classNames={`blue-back`} />
+      <BackButton />
       <Button
         title="Start/Stop"
         onClick={handleToggle}
         classNames={`${running ? 'red-back' : 'green7-back'}`}
       />
+      <SettingsBtn />
 
       {outlet}
       <Console visible={env !== 'prod'} />

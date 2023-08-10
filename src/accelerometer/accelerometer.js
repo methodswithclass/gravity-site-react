@@ -204,6 +204,8 @@ const Accelerometer = function (props) {
 
     running = false;
 
+    self.reset();
+
     unattach();
 
     if (timer) {
@@ -223,7 +225,7 @@ const Accelerometer = function (props) {
     pos0 = new Vector({ x: 0, y: 0, time: 0 });
     startTime = 0;
 
-    updateMotion(pos0, vel0, accel0);
+    handleEvent({ detail: { pos: pos0, vel: vel0, accel: accel0 } });
   };
 
   self.unfiltered = () => {
