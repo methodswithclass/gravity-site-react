@@ -22,22 +22,22 @@ const states = [
     page: true,
     showObject: true,
   },
-  {
-    name: 'balance',
-    url: '/moveable/game/balance',
-    color: 'blue4-back',
-    title: 'Balance',
-    page: true,
-    showObject: true,
-  },
-  {
-    name: 'collide',
-    url: '/moveable/game/collide',
-    color: 'green7-back',
-    title: 'Collide',
-    page: true,
-    showObject: true,
-  },
+  // {
+  //   name: 'balance',
+  //   url: '/moveable/game/balance',
+  //   color: 'blue4-back',
+  //   title: 'Balance',
+  //   page: true,
+  //   showObject: true,
+  // },
+  // {
+  //   name: 'collide',
+  //   url: '/moveable/game/collide',
+  //   color: 'green7-back',
+  //   title: 'Collide',
+  //   page: true,
+  //   showObject: true,
+  // },
 ];
 
 const stateMap = states.reduce((accum, item) => {

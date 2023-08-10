@@ -11,14 +11,14 @@ const routes = () => {
   return (
     <Routes>
       <Route path="moveable" element={<Moveable />}>
-        <Route path="game" element={<Game />}>
+        {/* <Route path="game" element={<Game />}>
           <Route path="balance" element={<Balance />} />
           <Route path="collide" element={<Collide />} />
-        </Route>
+        </Route> */}
       </Route>
       <Route path="home" element={<Home />} />
       <Route path="settings" element={<Settings />} />
-      <Route path="/" element={<Root />} />
+      <Route path="*" element={<Root />} />
     </Routes>
   );
 };
