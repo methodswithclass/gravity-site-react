@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react';
+import Routes from 'app/routes';
+import { overrideConsole } from 'app/utils/utils';
+import './styles/index.scss';
+import { init } from 'accelerometer/utils/calibrate';
 
 function App() {
+  const { REACT_APP_ENV: env } = process.env;
+  if (env === 'prod') {
+    overrideConsole();
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="museo">
+      <ChakraProvider>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </ChakraProvider>
     </div>
   );
 }
