@@ -1,2 +1,5 @@
-export { default as Accelerometer } from './accelerometer';
-export { default as Object } from './object';
+import { init as Accelerometer, ValidStates } from './accelerometer';
+
+export { ValidStates };
+
+export default Accelerometer;

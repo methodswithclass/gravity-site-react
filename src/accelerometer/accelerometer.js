@@ -1,41 +1,95 @@
-import { Vector, averageVector } from './utils/utils';
-import { getCalibrate } from './utils/calibrate';
+import Thing from './thing';
+import { Vector, averageVector, truncate, delay } from './utils/utils';
 
-const Accelerometer = function (props) {
+export const ValidStates = {
+  valid: 'valid',
+  invalid: 'invalid',
+  unchecked: 'unchecked',
+};
+
+const valid = {};
+
+const testAccel = (id) => (e) => {
+  valid[id] = !Number.isNaN(e.acceleration.x);
+};
+
+const requestDeviceMotion = async (id) => {
+  await delay(1000);
+  if (!valid[id]) {
+    throw new Error('DeviceMotion is not supported.');
+  } else if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    console.log('request permission');
+    const result = await DeviceMotionEvent.requestPermission();
+    if (!result || result !== 'granted') {
+      throw new Error('Permission denied by user');
+    }
+  } else {
+    // no need for permission
+    console.log('no need for permission');
+  }
+};
+
+const check = async ({ id, overrideValidate }) => {
+  window.ondevicemotion = testAccel(id);
+
+  try {
+    await requestDeviceMotion(id);
+    return 'valid';
+  } catch (error) {
+    console.log('error getting device motion', id, error.message);
+    return overrideValidate ? 'valid' : 'invalid';
+  }
+};
+
+const Accelerometer = function (props = {}) {
   const self = this;
 
-  const id = props.id;
-  const object = props.object;
-  const params = props.params;
+  const {
+    id = 'global',
+    arena,
+    object: objectId,
+    overrideValidate,
+    params,
+  } = props;
 
   const {
-    mu,
-    bounce: doesBounce,
-    damp,
-    filterSize,
-    gravity,
-    interval,
-    factor: globalFactor,
-    xDir: xAxis,
-    yDir: yAxis,
-  } = params;
+    mu = 0.1,
+    bounce: doesBounce = true,
+    damp = 0.4,
+    filterSize = 3,
+    gravity = true,
+    interval = 2,
+    timeout = 2,
+    factor: globalFactor = 0.008,
+    xDir: xAxis = 1,
+    yDir: yAxis = 1,
+  } = params || {};
 
   let timer;
   let filterBucket = [];
-  let unfiltered = new Vector({ x: 0, y: 0 });
-  let threshold = globalFactor * 0.5;
-  let pos0 = new Vector({ x: 0, y: 0 });
-  let vel0 = new Vector({ x: 0, y: 0 });
-  let accel0 = new Vector({ x: 0, y: 0 });
-  let pos1 = new Vector({ x: 0, y: 0 });
-  let vel1 = new Vector({ x: 0, y: 0 });
-  let accel1 = new Vector({ x: 0, y: 0 });
+  let unfiltered = new Vector();
+  let timeoutBucket = [];
+  let timeoutCheck = {};
+  let pos0 = new Vector();
+  let vel0 = new Vector();
+  let accel0 = new Vector();
+  let pos1 = new Vector();
+  let vel1 = new Vector();
+  let accel1 = new Vector();
   let startTime = 0;
   let currentTime = 0;
+  let previousTime = 0;
   let running = false;
   let xDir = xAxis;
   let yDir = yAxis;
   let factor = globalFactor;
+  let threshold = factor * factor;
+  let isValid = ValidStates.unchecked;
+  const object = new Thing({ id: `object-${id}`, arena, object: objectId });
+
+  const init = (_self) => {
+    _self.reset();
+  };
 
   const motion = (e) => {
     if (!running) {
@@ -53,31 +107,23 @@ const Accelerometer = function (props) {
       },
     };
 
-    // console.log('debug motion', raw);
-
     if (gravity) {
       unfiltered.set({
-        x: xDir * factor * raw.gravity.x,
-        y: yDir * factor * raw.gravity.y,
-        time: (e.timeStamp - startTime) / 1000,
+        x: xDir && factor ? xDir * factor * raw.gravity.x : raw.gravity.x,
+        y: yDir && factor ? yDir * factor * raw.gravity.y : raw.gravity.y,
       });
     } else {
       unfiltered.set({
-        x: xDir * factor * raw.abs.x,
-        y: yDir * factor * raw.abs.y,
-        time: (e.timeStamp - startTime) / 1000,
+        x: xDir && factor ? xDir * factor * raw.abs.x : raw.abs.x,
+        y: yDir && factor ? yDir * factor * raw.abs.y : raw.abs.y,
       });
     }
-
-    // console.log('debug raw', xDir, factor, unfiltered.x, unfiltered.y);
   };
 
   const handleEvent = (e) => {
-    // func(id, e.pos, e.vel, e.acc);
-    // console.log('debug event', e.detail.pos.x, e.detail.pos.y);
-    object.setPosition(e.detail.pos);
-    object.setVelocity(e.detail.vel);
-    object.setAcceleration(e.detail.acc);
+    object?.setPosition(e.detail.pos);
+    object?.setVelocity(e.detail.vel);
+    object?.setAcceleration(e.detail.accel);
   };
 
   const attach = () => {
@@ -91,21 +137,52 @@ const Accelerometer = function (props) {
     window.removeEventListener(`accel${id}`, handleEvent);
   };
 
-  const setCalibrate = () => {
-    const calibrate = getCalibrate();
-    xDir = calibrate?.xDir || xDir;
-    yDir = calibrate?.yDir || yDir;
-    factor = calibrate?.factor || factor;
-    console.log('debug factor', factor);
-    threshold = factor * 0.5;
+  const updateMotion = (pos, vel, accel) => {
+    window.dispatchEvent(
+      new CustomEvent(`accel${id}`, {
+        detail: { pos, vel, accel },
+      })
+    );
+  };
+
+  const hasTimedOut = () => {
+    const averagedAccel = new Vector();
+    timeoutBucket.push(unfiltered);
+    if (timeoutBucket.length < 10) {
+      return false;
+    }
+
+    averagedAccel.set(
+      averageVector(timeoutBucket, (accum, item) => {
+        const { x, y } = accum;
+        return { x: x + truncate(item.x, 8), y: y + truncate(item.y, 6) };
+      })
+    );
+    timeoutBucket = [];
+    const key = averagedAccel.print();
+    if (!timeoutCheck[key]) {
+      timeoutCheck[key] = [];
+    }
+    timeoutCheck[key].push(true);
+
+    const result = Object.values(timeoutCheck).some((items) => {
+      return items?.length > 100 * timeout;
+    });
+
+    if (!running || result) {
+      timeoutCheck = {};
+      return true;
+    }
+
+    return false;
   };
 
   const bounce = () => {
-    const wallStatus = object.hasHitWall(pos1);
+    const wallStatus = object?.hasHitWall(pos1);
 
     const minVel = 12 * (Math.abs(accel1.y) + Math.abs(accel1.x));
 
-    if (wallStatus.x) {
+    if (wallStatus?.x) {
       pos1.x = wallStatus.xmax;
       vel1.x = -(1 - damp) * vel1.x;
       if ((Math.abs(vel1.x) < minVel && gravity) || !doesBounce) {
@@ -113,7 +190,7 @@ const Accelerometer = function (props) {
       }
     }
 
-    if (wallStatus.y) {
+    if (wallStatus?.y) {
       pos1.y = wallStatus.ymax;
       vel1.y = -(1 - damp) * vel1.y;
       if ((Math.abs(vel1.y) < minVel && gravity) || !doesBounce) {
@@ -123,20 +200,12 @@ const Accelerometer = function (props) {
   };
 
   const friction = () => {
-    if (accel1.len() == 0) {
+    if (accel1.len() === 0) {
       vel1 = vel1.multiply(1 - mu);
     }
   };
 
-  const updateMotion = (pos, vel, acc) => {
-    window.dispatchEvent(
-      new CustomEvent(`accel${id}`, {
-        detail: { pos, vel, acc },
-      })
-    );
-  };
-
-  const integrate = (accelArray) => {
+  const integrate = (accelArray, currentTime) => {
     if (!running) {
       return;
     }
@@ -144,10 +213,10 @@ const Accelerometer = function (props) {
     accel1.set(averageVector(accelArray));
 
     if (accel1.len() < threshold) {
-      accel1.set(new Vector({ x: 0, y: 0, time: accel1.time }));
+      accel1.set(new Vector());
     }
 
-    const timeInterval = interval * filterSize;
+    const timeInterval = currentTime - previousTime;
 
     vel1.set(
       vel0
@@ -168,35 +237,59 @@ const Accelerometer = function (props) {
     pos0.set(pos1);
     vel0.set(vel1);
     accel0.set(accel1);
+    previousTime = currentTime;
+  };
+
+  const update = () => {
+    currentTime = new Date().getTime();
+
+    if (hasTimedOut()) {
+      self.stop();
+      return;
+    }
+
+    filterBucket.push(unfiltered);
+
+    if (filterBucket.length === filterSize) {
+      integrate(filterBucket, currentTime);
+
+      filterBucket = [];
+    }
+  };
+
+  self.validate = async () => {
+    if (isValid === ValidStates.valid) {
+      return isValid;
+    }
+    isValid = await check({ id, overrideValidate });
+    return isValid;
   };
 
   self.getObject = () => {
     return object;
   };
 
+  self.calibrate = (params) => {
+    const { xDir: xAxis, yDir: yAxis, factor: globalFactor } = params;
+
+    xDir = xAxis ? xAxis : xDir;
+    yDir = yAxis ? yAxis : yDir;
+    factor = globalFactor > 0 ? globalFactor : factor;
+    threshold = factor * factor;
+  };
+
   self.start = () => {
-    setCalibrate();
-
     console.log('start accel', id);
-
-    startTime = new Date().getTime();
-    currentTime = startTime;
 
     attach();
     this.reset();
 
+    startTime = new Date().getTime();
+    previousTime = startTime;
+
     running = true;
 
-    timer = setInterval(() => {
-      currentTime = currentTime + interval;
-      filterBucket.push(unfiltered);
-
-      if (filterBucket.length == filterSize) {
-        integrate(filterBucket);
-
-        filterBucket = [];
-      }
-    }, interval);
+    timer = setInterval(update, interval);
   };
 
   self.stop = () => {
@@ -218,11 +311,13 @@ const Accelerometer = function (props) {
     console.log('reset accel', id);
 
     filterBucket = [];
+    timeoutBucket = [];
+    timeoutCheck = {};
 
-    unfiltered = new Vector({ x: 0, y: 0, time: 0 });
-    accel0 = new Vector({ x: 0, y: 0, time: 0 });
-    vel0 = new Vector({ x: 0, y: 0, time: 0 });
-    pos0 = new Vector({ x: 0, y: 0, time: 0 });
+    unfiltered = new Vector();
+    accel0 = new Vector();
+    vel0 = new Vector();
+    pos0 = new Vector();
     startTime = 0;
 
     handleEvent({ detail: { pos: pos0, vel: vel0, accel: accel0 } });
@@ -236,9 +331,26 @@ const Accelerometer = function (props) {
     return running;
   };
 
-  self.check = () => {
-    return { accel: unfiltered, wall: object.hasHitWall(pos1) };
-  };
+  init(self);
+  self.validate();
 };
 
-export default Accelerometer;
+const accelMap = {};
+
+export const init = (input) => {
+  const { id, params } = input;
+
+  const existingAccel = accelMap[id];
+  if (existingAccel) {
+    existingAccel.calibrate(params);
+    return existingAccel;
+  }
+
+  const accel = new Accelerometer(input);
+
+  accel.reset();
+
+  accelMap[id] = accel;
+
+  return accel;
+};

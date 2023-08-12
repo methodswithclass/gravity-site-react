@@ -3,48 +3,43 @@ import { Vector, truncate } from './utils/utils';
 const Arena = function (props) {
   const self = this;
 
-  const { arena = {} } = props;
-  const container = arena?.current || {};
-  self.width = container.offsetWidth;
-  self.height = container.offsetHeight;
+  const { arena } = props;
+  const container = document.getElementById(arena) || {};
+  self.width = container?.offsetWidth;
+  self.height = container?.offsetHeight;
 };
 
-const Object = function (props) {
+const Thing = function (props) {
   const self = this;
 
   const { arena, object } = props;
 
-  self.position = new Vector({ x: 0, y: 0 });
-  self.velocity = new Vector({ x: 0, y: 0 });
-  self.acceleration = new Vector({ x: 0, y: 0 });
+  self.position = new Vector();
+  self.velocity = new Vector();
+  self.acceleration = new Vector();
   self.arena = new Arena({ arena });
-  const container = object?.current || {};
-  self.width = container.offsetWidth;
-  self.height = container.offsetHeight;
   self.radius = self.width / 2;
   self.bounds = {};
 
+  const getObject = () => {
+    const container = document.getElementById(object) || { style: {} };
+    container.style.zIndex = 1000;
+    self.width = container.offsetWidth || 10;
+    self.height = container.offsetHeight || 10;
+    return container;
+  };
+
   const getBounds = () => {
-    // console.log(
-    //   'debug arena',
-    //   self.arena.width,
-    //   self.width,
-    //   self.arena.width / 2 - self.width / 2
-    // );
+    getObject();
     self.bounds = {
       width: self.arena.width / 2 - self.width / 2,
       height: self.arena.height / 2 - self.height / 2,
     };
   };
 
-  self.setPosition = (_pos) => {
+  self.setPosition = (pos) => {
+    const container = getObject();
     getBounds();
-    // console.log('debug set', self.bounds, _pos.x, _pos.y);
-    const pos = {
-      x: _pos.x,
-      y: _pos.y,
-      time: _pos.time,
-    };
 
     self.position.set(pos);
 
@@ -95,4 +90,4 @@ const Object = function (props) {
   };
 };
 
-export default Object;
+export default Thing;

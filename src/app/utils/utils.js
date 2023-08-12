@@ -1,12 +1,20 @@
 const _mobile = false;
 
-export const overrideConsole = () => {
+const { REACT_APP_ENV: env } = process.env;
+
+const showConsole = env !== 'prod';
+
+export { showConsole };
+
+export const overrideConsole = (override) => {
   const console = {
     log: () => {},
     warn: () => {},
     error: () => {},
   };
-  window.console = console;
+  if (override) {
+    window.console = console;
+  }
 };
 
 export const saveToLocal = (key, value) => {
@@ -42,4 +50,11 @@ export var checkMobile = function () {
   })(navigator.userAgent || navigator.vendor || window.opera);
 
   return check;
+};
+
+export const truncate = (number, decimal) => {
+  const value =
+    Math.floor(number * Math.pow(10, decimal)) / Math.pow(10, decimal);
+
+  return value;
 };

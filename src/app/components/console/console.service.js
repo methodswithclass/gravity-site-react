@@ -1,4 +1,9 @@
 import { useState, useEffect } from 'react';
+import { showConsole, overrideConsole } from 'app/utils/utils';
+
+overrideConsole(!showConsole);
+
+const oldLog = console.log;
 
 export const useConsole = () => {
   const [history, setHistory] = useState([]);
@@ -14,7 +19,6 @@ export const useConsole = () => {
   };
 
   const attach = () => {
-    const oldLog = console.log;
     console.log = function (...args) {
       log.apply(log, args);
       oldLog.apply(oldLog, args);

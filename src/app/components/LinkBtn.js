@@ -11,8 +11,8 @@ const LinkBtn = (props) => {
   };
 
   return (
-    <div className={`linkbtn`} onClick={handleClick}>
-      <div className={`container ${item.color}`}>
+    <div className={`linkbtn`}>
+      <div className={`container ${item.color}`} onClick={handleClick}>
         <div className="inner">{name}</div>
       </div>
     </div>

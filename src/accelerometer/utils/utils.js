@@ -1,9 +1,9 @@
-export const Vector = function (props) {
+export const Vector = function (props = {}) {
   const self = this;
 
-  self.x = props.x;
-  self.y = props.y;
-  self.time = props.time || 0;
+  self.x = props?.x || 0;
+  self.y = props?.y || 0;
+  self.time = props?.time || 0;
 
   self.len = () => {
     return Math.sqrt(self.x * self.x + self.y * self.y);
@@ -42,26 +42,37 @@ export const Vector = function (props) {
   };
 
   self.set = (vector) => {
-    self.x = vector?.x || 0;
-    self.y = vector?.y || 0;
-    self.time = vector?.time || 0;
+    self.x = !Number.isNaN(vector?.x) ? vector.x : self.x;
+    self.y = !Number.isNaN(vector?.y) ? vector.y : self.y;
+    self.time = !Number.isNaN(vector?.time) ? vector.time : self.time;
   };
 
-  self.print = () => {
-    return `x:${self.x} y:${self.y} t:${self.time}`;
+  self.print = (prefix) => {
+    return `${prefix ? `${prefix}: ` : ''}x:${self.x} y:${self.y} t:${
+      self.time
+    }`;
   };
 };
 
-export const averageVector = (array) => {
+export const delay = (interval) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, interval);
+  });
+};
+
+export const averageVector = (array, callback) => {
   if (!array || array.length === 0) {
     return new Vector({ x: 0, y: 0, time: 0 });
   }
 
   const sum = array.reduce(
-    (accum, item) => {
+    (accum, item, index) => {
       const { x, y } = accum;
-      //   console.log('debug average', item);
-      return { x: x + item?.x, y: y + item?.y };
+      return typeof callback === 'function'
+        ? callback(accum, item, index, array)
+        : { x: x + item?.x, y: y + item?.y };
     },
     { x: 0, y: 0 }
   );
@@ -128,7 +139,7 @@ export const leadingzeros = (number, zeros) => {
 
   const digits = Math.floor(log(number * 10, 10));
   const total = Math.floor(log(zeros, 10)) - digits;
-  const leading = '';
+  let leading = '';
   for (let i = 0; i <= total; i++) {
     leading += '0';
   }
@@ -168,7 +179,7 @@ export const linear = (first, second) => {
   let m;
   let b;
 
-  if (x2 != x1) {
+  if (x2 !== x1) {
     m = (y2 - y1) / (x2 - x1);
     b = x1 * m + y1;
   } else {

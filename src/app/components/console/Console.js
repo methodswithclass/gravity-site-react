@@ -1,5 +1,5 @@
 import React from 'react';
-import './Console.scss';
+import './Console.css';
 import { useConsole } from './console.service';
 
 const Console = (props) => {

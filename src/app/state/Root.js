@@ -6,7 +6,7 @@ const Root = () => {
 
   useEffect(() => {
     navigate('home');
-  }, []);
+  }, [navigate]);
   return <div></div>;
 };
 
