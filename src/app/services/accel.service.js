@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Accelerometer, { ValidStates } from 'accelerometer';
+import Accelerometer, { ValidStatus } from 'accelerometer';
 import { getCalibrate } from './calibrate.service';
 
 const overrideValidate = false;
@@ -27,7 +27,7 @@ const init = (props) => {
 };
 
 export const useValidate = (params) => {
-  const [valid, setValid] = useState(ValidStates.unchecked);
+  const [valid, setValid] = useState(ValidStatus.unchecked);
   const [accel, setAccel] = useState({});
   const { id } = params;
   useEffect(() => {

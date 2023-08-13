@@ -3,9 +3,9 @@ import { saveToLocal, getFromLocal, truncate } from 'app/utils/utils';
 const initialCalibrate = {
   xDir: 1,
   yDir: 1,
+  factorMin: Math.pow(10, -4),
   factor: Math.pow(10, -3) * 0.8,
-  factorMax: Math.pow(10, -3),
-  factorMin: Math.pow(10, -6),
+  factorMax: Math.pow(10, -3) * 3,
 };
 
 let calibrate = {};

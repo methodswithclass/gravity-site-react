@@ -23,6 +23,7 @@ const Thing = function (props) {
 
   const getObject = () => {
     const container = document.getElementById(object) || { style: {} };
+    container.style.position = 'absolute';
     container.style.zIndex = 1000;
     self.width = container.offsetWidth || 10;
     self.height = container.offsetHeight || 10;
@@ -57,13 +58,9 @@ const Thing = function (props) {
     self.acceleration.set(accel);
   };
 
-  self.hasHitWall = (_pos) => {
+  self.hasHitWall = (pos) => {
     getBounds();
 
-    const pos = {
-      x: _pos.x,
-      y: _pos.y,
-    };
     const sideX = pos.x / Math.abs(pos.x);
     const sideY = pos.y / Math.abs(pos.y);
 
