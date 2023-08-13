@@ -22,6 +22,14 @@ const states = [
     page: true,
     showObject: true,
   },
+  {
+    name: 'slide',
+    url: '/slide',
+    color: 'blue4-back',
+    title: 'Slide',
+    page: true,
+    showObject: true,
+  },
   // {
   //   name: 'balance',
   //   url: '/moveable/game/balance',

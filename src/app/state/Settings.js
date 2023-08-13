@@ -10,14 +10,13 @@ import {
   SliderThumb,
   SliderMark,
   ListItem,
-  ListIcon,
   UnorderedList,
 } from '@chakra-ui/react';
 import {
   setCalibrate,
   getInitialCalibrate,
   getFactorFromPercent,
-} from 'accelerometer/utils/calibrate';
+} from '../services/calibrate.service';
 import BackButton from 'app/components/BackButton';
 import { checkMobile } from 'app/utils/utils';
 
@@ -67,29 +66,35 @@ const Settings = () => {
           </ListItem>
           <ListItem>Adjust the speed by moving the slider</ListItem>
         </UnorderedList>
-        <FormControl
-          m={50}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+        <Flex
+          w={`${isMobile ? '100%' : '40%'}`}
+          direction={'column'}
+          align="center"
+          justify="center"
         >
-          <FormLabel htmlFor="x-dir" mb="0">
-            horizontal
-          </FormLabel>
-          <Switch size="lg" id="x-dir" isChecked={xDir} onChange={handleX} />
-        </FormControl>
-        <FormControl
-          m={50}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <FormLabel htmlFor="y-dir" mb="0">
-            vertical
-          </FormLabel>
-          <Switch size="lg" id="y-dir" isChecked={yDir} onChange={handleY} />
-        </FormControl>
-
+          <FormControl
+            m={50}
+            display="flex"
+            alignItems="center"
+            justifyContent="space-around"
+          >
+            <FormLabel w={200} htmlFor="x-dir" mb="0">
+              horizontal
+            </FormLabel>
+            <Switch size="lg" id="x-dir" isChecked={xDir} onChange={handleX} />
+          </FormControl>
+          <FormControl
+            m={50}
+            display="flex"
+            alignItems="center"
+            justifyContent="space-around"
+          >
+            <FormLabel w={200} htmlFor="y-dir" mb="0">
+              vertical
+            </FormLabel>
+            <Switch size="lg" id="y-dir" isChecked={yDir} onChange={handleY} />
+          </FormControl>
+        </Flex>
         <FormControl
           m={50}
           display="flex"

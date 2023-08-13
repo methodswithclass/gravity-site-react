@@ -10,12 +10,13 @@ import Root from '../state/Root';
 const routes = () => {
   return (
     <Routes>
-      <Route path="moveable" element={<Moveable />}>
+      <Route path="moveable" element={<Moveable gravity={true} />}>
         {/* <Route path="game" element={<Game />}>
           <Route path="balance" element={<Balance />} />
           <Route path="collide" element={<Collide />} />
         </Route> */}
       </Route>
+      <Route path="slide" element={<Moveable gravity={false} />} />
       <Route path="home" element={<Home />} />
       <Route path="settings" element={<Settings />} />
       <Route path="*" element={<Root />} />

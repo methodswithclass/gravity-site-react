@@ -1,39 +1,46 @@
-import { Accelerometer, Object } from 'accelerometer';
-import { getCalibrate } from 'accelerometer/utils/calibrate';
+import { useEffect, useState } from 'react';
+import Accelerometer, { ValidStatus } from '@methodswithclass/accelerometer';
+import { getCalibrate } from './calibrate.service';
 
-const accelMap = {};
+const overrideValidate = false;
 
-export const init = (props) => {
+const init = (props) => {
   const calibrate = getCalibrate();
 
-  const { id, object: objectRef, arena: arenaRef } = props;
+  console.log('debug calibrate', calibrate);
+
+  const { id = 'global', gravity, object, arena } = props || {};
   const params = {
-    interval: 2,
-    filterSize: 3,
-    mu: 0.1,
-    damp: 0.4,
-    gravity: true,
-    bounce: true,
+    gravity,
     ...calibrate,
   };
 
-  const obj = new Object({
-    id: 'object',
-    arena: arenaRef,
-    object: objectRef,
+  const accel = Accelerometer({
+    id,
+    arena,
+    object,
+    params,
+    overrideValidate,
   });
 
-  const accel = new Accelerometer({
-    id: `accel-${id}`,
-    object: obj,
-    params: params,
-  });
-
-  accel.reset();
-
-  accelMap[id] = accel;
+  return accel;
 };
 
-export const get = (id) => {
-  return accelMap[id];
+export const useValidate = (params) => {
+  const [valid, setValid] = useState(ValidStatus.unchecked);
+  const [accel, setAccel] = useState({});
+  const { id } = params;
+  useEffect(() => {
+    const accel = init(params);
+    accel.reset();
+    accel.validate().then((valid) => {
+      setValid(valid);
+    });
+    setAccel(accel);
+    return () => {
+      accel.stop();
+    };
+  }, [id]);
+
+  return { valid, accel };
 };

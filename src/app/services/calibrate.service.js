@@ -1,17 +1,16 @@
-import { saveToLocal, getFromLocal } from 'app/utils/utils';
-import { truncate } from './utils';
+import { saveToLocal, getFromLocal, truncate } from 'app/utils/utils';
 
 const initialCalibrate = {
   xDir: 1,
   yDir: 1,
-  factor: 0.008,
-  factorMax: 0.01,
   factorMin: Math.pow(10, -4),
+  factor: Math.pow(10, -3) * 0.8,
+  factorMax: Math.pow(10, -3) * 3,
 };
 
 let calibrate = {};
 
-export const init = () => {
+const init = () => {
   const fromLocal = getFromLocal('calibrate');
   calibrate = { ...initialCalibrate, ...fromLocal, ...calibrate };
 };
@@ -43,5 +42,6 @@ export const setCalibrate = (params) => {
 };
 
 export const getCalibrate = () => {
+  init();
   return calibrate;
 };
