@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Accelerometer, { ValidStatus } from 'accelerometer';
+import Accelerometer, { ValidStatus } from '@methodswithclass/accelerometer';
 import { getCalibrate } from './calibrate.service';
 
 const overrideValidate = false;
