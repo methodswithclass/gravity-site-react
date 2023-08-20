@@ -26,21 +26,37 @@ const init = (props) => {
   return accel;
 };
 
-export const useValidate = (params) => {
+export const useValidate = (params, check) => {
   const [valid, setValid] = useState(ValidStatus.unchecked);
-  const [accel, setAccel] = useState({});
+  const [accelState, setAccel] = useState(null);
+  const [checking, setChecking] = useState('notchecking');
   const { id } = params;
+
+  const handleCheck = (accelParam, checkingStatus) => {
+    if (accelParam) {
+      setChecking(checkingStatus);
+      accelParam.validate().then((valid) => {
+        setValid(valid);
+        setChecking('notchecking');
+      });
+    }
+  };
+
   useEffect(() => {
     const accel = init(params);
-    accel.reset();
-    accel.validate().then((valid) => {
-      setValid(valid);
-    });
     setAccel(accel);
+    accel.reset();
+    handleCheck(accel, 'auto-checking');
     return () => {
       accel.stop();
     };
   }, [id]);
 
-  return { valid, accel };
+  useEffect(() => {
+    if (check) {
+      handleCheck(accelState, 'manual-checking');
+    }
+  }, [check, accelState]);
+
+  return { valid, accel: accelState, checking };
 };
