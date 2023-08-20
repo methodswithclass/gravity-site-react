@@ -38,7 +38,6 @@ export const useValidate = (params, check) => {
       accelParam.validate().then((valid) => {
         setValid(valid);
         setChecking('notchecking');
-        accelParam.stop();
       });
     }
   };
