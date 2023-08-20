@@ -2551,10 +2551,10 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@methodswithclass/accelerometer@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@methodswithclass/accelerometer/-/accelerometer-3.2.1.tgz#967b6f057f432b7ecfd9b5f1050801130a17a840"
-  integrity sha512-dUyiNYuxNEucw3vld3DzOinFOdp545CqTD8NYR75OvHKcAuu/8qUMBfncFGn+/HCzlOpPW8dJMIBdW64/j2CFw==
+"@methodswithclass/accelerometer@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@methodswithclass/accelerometer/-/accelerometer-3.3.0.tgz#486076d00aa95d186bba8b3b648eff228f6ebba5"
+  integrity sha512-s/FvLRUgv/006s+LZCl2lBw/I01/dG8sA6vytdjDQF7fgkz3Yfsbwj9PZVwHiXLQgVh8CzfsqOnWG9LPyllqdw==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
