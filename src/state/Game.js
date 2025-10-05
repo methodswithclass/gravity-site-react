@@ -1,4 +1,4 @@
-import { useOutlet } from 'react-router-dom';
+import { useOutlet } from "react-router";
 
 const Game = () => {
   const outlet = useOutlet();

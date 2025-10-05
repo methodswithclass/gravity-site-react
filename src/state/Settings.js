@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Switch,
   FormControl,
@@ -11,14 +11,14 @@ import {
   SliderMark,
   ListItem,
   UnorderedList,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import {
   setCalibrate,
   getInitialCalibrate,
   getFactorFromPercent,
-} from '../services/calibrate.service';
-import BackButton from 'app/components/BackButton';
-import { checkMobile } from 'app/utils/utils';
+} from "services/calibrate-service";
+import BackButton from "components/BackButton";
+import { checkMobile } from "utils/utils";
 
 const Settings = () => {
   const { initialFactor, xDir: xAxis, yDir: yAxis } = getInitialCalibrate();
@@ -43,7 +43,7 @@ const Settings = () => {
 
   const handleFactor = (value) => {
     const factor = getFactorFromPercent(value);
-    console.log('debug factor', factor);
+    console.log("debug factor", factor);
     setCalibrate({ factor });
     setSliderValue(value);
   };
@@ -54,7 +54,7 @@ const Settings = () => {
       <Flex
         w="100%"
         h="100%"
-        p={`${isMobile ? '50px 100px' : '50px 40%'}`}
+        p={`${isMobile ? "50px 100px" : "50px 40%"}`}
         direction="column"
         align="center"
         justify="center"
@@ -67,8 +67,8 @@ const Settings = () => {
           <ListItem>Adjust the speed by moving the slider</ListItem>
         </UnorderedList>
         <Flex
-          w={`${isMobile ? '100%' : '40%'}`}
-          direction={'column'}
+          w={`${isMobile ? "100%" : "40%"}`}
+          direction={"column"}
           align="center"
           justify="center"
         >

@@ -1,11 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from '../state/Home';
-import Moveable from '../state/Moveable';
-import Game from '../state/Game';
-import Collide from '../state/Collide';
-import Balance from '../state/Balance';
-import Settings from '../state/Settings';
-import Root from '../state/Root';
+import { Routes, Route } from "react-router";
+import Home from "state/Home";
+import Moveable from "state/Moveable";
+import Game from "state/Game";
+import Collide from "state/Collide";
+import Balance from "state/Balance";
+import Settings from "state/Settings";
+import Root from "state/Root";
 
 const routes = () => {
   return (

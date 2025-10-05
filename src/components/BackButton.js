@@ -1,5 +1,5 @@
-import { useNavigate } from 'app/services/state.service';
-import Button from './Button';
+import { useNavigate } from "services/state-service";
+import Button from "./Button";
 
 const BackButton = () => {
   const navigate = useNavigate();

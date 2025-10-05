@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import Accelerometer, { ValidStatus } from '@methodswithclass/accelerometer';
-import { getCalibrate } from './calibrate.service';
+import { useEffect, useState } from "react";
+import Accelerometer, { ValidStatus } from "@methodswithclass/accelerometer";
+import { getCalibrate } from "./calibrate-service";
 
 const overrideValidate = false;
 
 const init = (props) => {
   const calibrate = getCalibrate();
 
-  console.log('debug calibrate', calibrate);
+  console.log("debug calibrate", calibrate);
 
-  const { id = 'global', gravity, object, arena } = props || {};
+  const { id = "global", gravity, object, arena } = props || {};
   const params = {
     gravity,
     ...calibrate,
@@ -29,7 +29,7 @@ const init = (props) => {
 export const useValidate = (params, check) => {
   const [valid, setValid] = useState(ValidStatus.unchecked);
   const [accelState, setAccel] = useState(null);
-  const [checking, setChecking] = useState('notchecking');
+  const [checking, setChecking] = useState("notchecking");
   const { id } = params;
 
   const handleCheck = (accelParam, checkingStatus) => {
@@ -37,7 +37,7 @@ export const useValidate = (params, check) => {
       setChecking(checkingStatus);
       accelParam.validate().then((valid) => {
         setValid(valid);
-        setChecking('notchecking');
+        setChecking("notchecking");
       });
     }
   };
@@ -46,7 +46,7 @@ export const useValidate = (params, check) => {
     const accel = init(params);
     setAccel(accel);
     accel.reset();
-    handleCheck(accel, 'auto-checking');
+    handleCheck(accel, "auto-checking");
     return () => {
       accel.stop();
     };
@@ -54,7 +54,7 @@ export const useValidate = (params, check) => {
 
   useEffect(() => {
     if (check) {
-      handleCheck(accelState, 'manual-checking');
+      handleCheck(accelState, "manual-checking");
     }
   }, [check, accelState]);
 
