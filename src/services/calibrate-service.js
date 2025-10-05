@@ -1,4 +1,4 @@
-import { saveToLocal, getFromLocal, truncate } from 'app/utils/utils';
+import { saveToLocal, getFromLocal, truncate } from "utils/utils";
 
 const initialCalibrate = {
   xDir: 1,
@@ -11,7 +11,7 @@ const initialCalibrate = {
 let calibrate = {};
 
 const init = () => {
-  const fromLocal = getFromLocal('calibrate');
+  const fromLocal = getFromLocal("calibrate");
   calibrate = { ...initialCalibrate, ...fromLocal, ...calibrate };
 };
 
@@ -38,7 +38,7 @@ export const getFactorFromPercent = (value) => {
 
 export const setCalibrate = (params) => {
   calibrate = { ...calibrate, ...params };
-  saveToLocal('calibrate', JSON.stringify(calibrate));
+  saveToLocal("calibrate", JSON.stringify(calibrate));
 };
 
 export const getCalibrate = () => {

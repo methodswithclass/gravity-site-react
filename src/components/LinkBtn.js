@@ -1,4 +1,4 @@
-import { useNavigate, useGetItem } from '../services/state.service';
+import { useNavigate, useGetItem } from "services/state-service";
 
 const LinkBtn = (props) => {
   const { name, state } = props;

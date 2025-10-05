@@ -1,5 +1,5 @@
-import LinkBtn from '../components/LinkBtn';
-import { getPages } from '../services/state.service';
+import LinkBtn from "components/LinkBtn";
+import { getPages } from "services/state-service";
 
 const Home = () => {
   return (

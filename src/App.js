@@ -1,9 +1,8 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { ChakraProvider } from '@chakra-ui/react';
-import Routes from 'app/routes';
-import './styles/index.scss';
-import Validate from 'app/state/Validate';
+import { BrowserRouter } from "react-router";
+import { ChakraProvider } from "@chakra-ui/react";
+import Routes from "routes";
+import Validate from "state/Validate";
+import "./styles/index.scss";
 
 function App() {
   return (

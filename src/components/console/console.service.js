@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { showConsole, overrideConsole } from 'app/utils/utils';
+import { useState, useEffect } from "react";
+import { showConsole, overrideConsole } from "utils/utils";
 
 overrideConsole(!showConsole);
 
@@ -9,7 +9,7 @@ export const useConsole = () => {
   const [history, setHistory] = useState([]);
 
   const log = function (...args) {
-    let message = '';
+    let message = "";
 
     Object.values(args).forEach((value) => {
       message += ` ${JSON.stringify(value)}`;
@@ -25,7 +25,7 @@ export const useConsole = () => {
     };
 
     window.onerror = (msg, url, linenumber) => {
-      log('error', msg, url, linenumber);
+      log("error", msg, url, linenumber);
     };
   };
 

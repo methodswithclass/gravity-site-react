@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useOutlet } from 'react-router-dom';
-import Button from 'app/components/Button';
-import BackButton from 'app/components/BackButton';
-import SettingsBtn from 'app/components/SettingsBtn';
-import { showConsole } from 'app/utils/utils';
-import { useValidate } from '../services/accel.service';
-import { useGetItem } from '../services/state.service';
-import Console from '../components/console/Console';
+import React, { useState, useEffect } from "react";
+import { useOutlet } from "react-router";
+import Button from "components/Button";
+import BackButton from "components/BackButton";
+import SettingsBtn from "components/SettingsBtn";
+import { showConsole } from "utils/utils";
+import { useValidate } from "services/accel-service";
+import { useGetItem } from "services/state-service";
+import Console from "components/console/Console";
 
 const Moveable = (props) => {
   const { gravity } = props;
@@ -16,8 +16,8 @@ const Moveable = (props) => {
   const { accel } = useValidate({
     id,
     gravity,
-    arena: 'arena',
-    object: 'object',
+    arena: "arena",
+    object: "object",
   });
   const [running, setRunning] = useState(false);
 
@@ -58,7 +58,7 @@ const Moveable = (props) => {
       <Button
         title="Start/Stop"
         onClick={handleToggle}
-        classNames={`${running ? 'red-back' : 'green7-back'}`}
+        classNames={`${running ? "red-back" : "green7-back"}`}
       />
       <SettingsBtn />
       {outlet}
